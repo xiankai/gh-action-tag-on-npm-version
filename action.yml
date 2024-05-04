@@ -13,6 +13,9 @@ inputs:
   tag-prefix:
     description: Prefix prepended to the version in package.json
     default: v
+  package-json-path:
+    description: Path to package.json
+    default: package.json
 runs:
   using: composite
   steps:
@@ -21,7 +24,7 @@ runs:
         #!/bin/bash
         set -eux
 
-        TAG="${TAG_PREFIX}$(cat package.json | jq -r '.version')"
+        TAG="${TAG_PREFIX}$(cat ${PACKAGE_JSON_PATH} | jq -r '.version')"
 
         # In case only a shallow clone was done
         git fetch --tags
@@ -39,3 +42,4 @@ runs:
         GIT_USER_NAME: ${{ inputs.git-user-name }}
         GIT_USER_EMAIL: ${{ inputs.git-user-email }}
         TAG_PREFIX: ${{ inputs.tag-prefix }}
+        PACKAGE_JSON_PATH: ${{ inputs.package-json-path }}
